@@ -12,6 +12,13 @@ class DataGrid(Dashboard.Item):
         { "field": 'lastName', "headerName": 'Last name', "width": 150, "editable": True, },
         { "field": 'age', "headerName": 'Age', "type": 'number', "width": 110, "editable": True, },
     ]
+    
+    COLUMNS = [
+        { "field": 'id', "headerName": 'ID', "width": 90 },
+        { "field": 'address', "headerName": 'Address', "width": 150, "editable": True, },
+        { "field": 'name', "headerName": 'Name', "width": 150, "editable": True, },
+        { "field": 'gpu', "headerName": 'GPU', "width": 150, "editable": True, },
+    ]
     DEFAULT_ROWS = [
         { "id": 1, "lastName": 'Snow', "firstName": 'Jon', "age": 35 },
         { "id": 2, "lastName": 'Lannister', "firstName": 'Cersei', "age": 42 },
@@ -32,7 +39,7 @@ class DataGrid(Dashboard.Item):
             data = json.loads(json_data)
         except json.JSONDecodeError:
             data = self.DEFAULT_ROWS
-
+        
         with mui.Paper(key=self._key, sx={"display": "flex", "flexDirection": "column", "borderRadius": 3, "overflow": "hidden"}, elevation=1):
             with self.title_bar(padding="10px 15px 10px 15px", dark_switcher=False):
                 mui.icon.ViewCompact()
@@ -40,11 +47,19 @@ class DataGrid(Dashboard.Item):
 
             with mui.Box(sx={"flex": 1, "minHeight": 0}):
                 mui.DataGrid(
-                    columns=self.DEFAULT_COLUMNS,
+                    columns=self.COLUMNS,
                     rows=data,
                     pageSize=5,
                     rowsPerPageOptions=[5],
-                    checkboxSelection=True,
-                    disableSelectionOnClick=True,
+                    
                     onCellEditCommit=self._handle_edit,
                 )
+            with mui.Box(
+                sx={
+                    "padding": "10px 15px 10px 15px",
+                    "marginTop": "10px",
+                    "display": "flex",
+                    "justifyContent": "center",
+                }
+            ):
+                mui.Button("开始训练", variant="contained", color="primary")
