@@ -4,6 +4,7 @@ from contextlib import contextmanager
 from io import StringIO
 import json
 import random
+import time
 import streamlit as st
 from streamlit.runtime.scriptrunner.script_run_context import get_script_run_ctx
 from pathlib import Path
@@ -84,6 +85,7 @@ def log_and_chart():
     with st_stderr(log_placeholder):
         accuracy_data = []
         for epoch in range(1, 50):
+            time.sleep(1)
             accuracy = random.uniform(70, 100)
             accuracy_data.append(accuracy)
             logging.warning(f"Epoch {epoch}: Train Accuracy: {accuracy:.2f}%")
