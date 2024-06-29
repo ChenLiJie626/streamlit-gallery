@@ -10,10 +10,10 @@ def main():
         st.title("🎈 Okld's Gallery")
 
         with st.expander("✨ APPS", True):
-            page.item("Streamlit gallery", apps.gallery, default=True)
+            page.item("Start", apps.gallery, default=True)
 
         with st.expander("🧩 COMPONENTS", True):
-            page.item("Elements⭐", components.elements)
+            page.item("Training⭐", components.elements)
 
     page.show()
 

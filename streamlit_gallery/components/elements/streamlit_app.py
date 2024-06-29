@@ -4,6 +4,7 @@ from contextlib import contextmanager
 from io import StringIO
 import json
 import random
+import threading
 import time
 import streamlit as st
 from streamlit.runtime.scriptrunner.script_run_context import get_script_run_ctx
@@ -14,6 +15,7 @@ from types import SimpleNamespace
 from .dashboard import Dashboard, Editor, Card, DataGrid, Radar, Pie, Player
 from streamlit_echarts import st_echarts
 
+lock = threading.Lock()
 # ECharts 配置
 def get_echarts_options(accuracy_data):
     return {
@@ -81,23 +83,28 @@ def log_and_chart():
     col1, col2 = st.columns(2)
     log_placeholder = col1.empty()  # 日志输出区域
     chart_placeholder = col2.empty()  # 图表输出区域
-    
+    print("start:",state.w.player._address,state.w.player._serverNames,state.w.player._serverNames,
+        state.w.player._clientNames,state.w.player._clientGPU)
     with st_stderr(log_placeholder):
         accuracy_data = []
-        for epoch in range(1, 50):
+        for epoch in range(1, 5):
             time.sleep(1)
             accuracy = random.uniform(70, 100)
             accuracy_data.append(accuracy)
             logging.warning(f"Epoch {epoch}: Train Accuracy: {accuracy:.2f}%")
             with chart_placeholder:
                 st_echarts(get_echarts_options(accuracy_data))
-
+    st.session_state["is_training"] = False
+    st.balloons()
     st.success("训练完成！")
 
 def main():
     setup_dashboard()
     display_elements()
-    log_and_chart()
+    if st.session_state.is_training and not lock.locked():
+        with lock:
+            with st.spinner('Wait for it...'):
+                log_and_chart()
 
 if __name__ == "__main__":
     st.set_page_config(layout="wide")

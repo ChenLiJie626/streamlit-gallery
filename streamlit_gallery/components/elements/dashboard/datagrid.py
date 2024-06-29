@@ -2,7 +2,7 @@ import json
 
 from streamlit_elements import mui
 from .dashboard import Dashboard
-
+import streamlit as st
 
 class DataGrid(Dashboard.Item):
 
@@ -31,8 +31,15 @@ class DataGrid(Dashboard.Item):
         { "id": 9, "lastName": 'Roxie', "firstName": 'Harvey', "age": 65 },
     ]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        st.session_state.setdefault("is_training", False)
+
     def _handle_edit(self, params):
         print(params)
+
+    def _start_training(self):
+        st.session_state["is_training"] = True
 
     def __call__(self, json_data):
         try:
@@ -62,4 +69,4 @@ class DataGrid(Dashboard.Item):
                     "justifyContent": "center",
                 }
             ):
-                mui.Button("开始训练", variant="contained", color="primary")
+                mui.Button("开始训练", variant="contained", color="primary",onClick=self._start_training, disabled=st.session_state.get("is_training", True))
