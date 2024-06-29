@@ -19,8 +19,8 @@ class Player(Dashboard.Item):
 
     def _set_name(self, event):
         sync()
-        role = getattr(st.session_state.role, "props", st.session_state.role).value
-        gpu = getattr(st.session_state.gpu, "props", st.session_state.gpu).value
+        role = st.session_state.role.props.value if hasattr(st.session_state.role, "props") else st.session_state.role
+        gpu = st.session_state.gpu.props.value if hasattr(st.session_state.gpu, "props") else st.session_state.gpu
 
         if role == "server":
             self._serverNames, self._serverGPU = event.target.value, gpu
